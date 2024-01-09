@@ -1,6 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable @typescript-eslint/no-floating-promises */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+
+
 import express from 'express'
 import { ethers, WebSocketProvider } from 'ethers'
 import mmAbi from './abis/mementoMori.json'
@@ -18,8 +19,8 @@ async function main (): Promise<void> {
 
   const sepoliaContract = new ethers.Contract(sepoliaMmAddress, mmAbi, sepoliaProvider)
   const baseGContract = new ethers.Contract(baseGMmAddress, mmXAbi, baseGProvider)
-  sepoliaContract.on('WillExecuted', async (owner) => {
-    let res
+  void sepoliaContract.on('WillExecuted', async (owner) => {
+    let res: Response
     try {
       res = await fetch(
       `${prodUrl}?filters[baseAddress][$eq]=${owner}&filters[chainSelector][$eq]=${sepoliaChainSelector}`,
@@ -34,7 +35,7 @@ async function main (): Promise<void> {
     const check = await res.json()
 
     console.log(check)
-    let response
+    let response: Response
     try {
       response = await fetch(`${prodUrl}/${check.data[0].id}`, {
         method: 'PUT',
@@ -47,8 +48,8 @@ async function main (): Promise<void> {
     console.log('sepolia will executed', response)
   })
 
-  baseGContract.on('WillExecuted', async (owner) => {
-    let res
+  void baseGContract.on('WillExecuted', async (owner) => {
+    let res: Response
     try {
       res = await fetch(
       `${prodUrl}?filters[baseAddress][$eq]=${owner}&filters[chainSelector][$eq]=${baseGChainSelector}`,
@@ -63,7 +64,7 @@ async function main (): Promise<void> {
     const check = await res.json()
 
     console.log(check)
-    let response
+    let response: Response
     try {
       response = await fetch(`${prodUrl}/${check.data[0].id}`, {
         method: 'PUT',
