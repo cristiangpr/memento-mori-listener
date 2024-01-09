@@ -9,7 +9,8 @@ import { baseGChainSelector, baseGMmAddress, prodUrl, sepoliaChainSelector, sepo
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config()
 const app = express()
-const port = process.env.PORT
+// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+const port = process.env.PORT || 80
 
 async function main (): Promise<void> {
   const sepoliaProvider = new WebSocketProvider(process.env.SEPOLIA_WEB_SOCKET)

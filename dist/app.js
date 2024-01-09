@@ -23,7 +23,8 @@ const constants_1 = require("./constants");
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 const app = (0, express_1.default)();
-const port = process.env.PORT;
+// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
+const port = process.env.PORT || 80;
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         const sepoliaProvider = new ethers_1.WebSocketProvider(process.env.SEPOLIA_WEB_SOCKET);
