@@ -23,7 +23,7 @@ const constants_1 = require("./constants");
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 const app = (0, express_1.default)();
-const port = 8000;
+const port = process.env.PORT;
 function main() {
     return __awaiter(this, void 0, void 0, function* () {
         const sepoliaProvider = new ethers_1.WebSocketProvider(process.env.SEPOLIA_WEB_SOCKET);
@@ -45,7 +45,7 @@ function main() {
             console.log(check);
             let response;
             try {
-                response = fetch(`${constants_1.prodUrl}/${check.data[0].id}`, {
+                response = yield fetch(`${constants_1.prodUrl}/${check.data[0].id}`, {
                     method: 'PUT',
                     headers: { Authorization: `bearer ${process.env.STRAPI_TOKEN}`, 'Content-Type': 'application/json' },
                     body: JSON.stringify({ data: { isActive: false, executed: true } })
@@ -71,7 +71,7 @@ function main() {
             console.log(check);
             let response;
             try {
-                response = fetch(`${constants_1.prodUrl}/${check.data[0].id}`, {
+                response = yield fetch(`${constants_1.prodUrl}/${check.data[0].id}`, {
                     method: 'PUT',
                     headers: { Authorization: `bearer ${process.env.STRAPI_TOKEN}`, 'Content-Type': 'application/json' },
                     body: JSON.stringify({ data: { isActive: false, executed: true } })
