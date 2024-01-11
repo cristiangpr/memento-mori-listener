@@ -19,6 +19,7 @@ const ethers_1 = require("ethers");
 const mementoMori_json_1 = __importDefault(require("./abis/mementoMori.json"));
 const mementoMoriXchain_json_1 = __importDefault(require("./abis/mementoMoriXchain.json"));
 const constants_1 = require("./constants");
+const terminate_1 = require("./terminate");
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 const app = (0, express_1.default)();
@@ -88,7 +89,15 @@ void main();
 app.get('/', (req, res) => {
     res.send('Memento Mori Listener');
 });
-app.listen(port, () => {
-    console.log(`Express is listening at http://localhost:${port}`);
+const server = app.listen(port, () => {
+    console.log(`Express is listening at ${port}`);
 });
+const exitHandler = (0, terminate_1.terminate)(server, {
+    coredump: false,
+    timeout: 500
+});
+process.on('uncaughtException', exitHandler(1, 'Unexpected Error'));
+process.on('unhandledRejection', exitHandler(1, 'Unhandled Promise'));
+process.on('SIGTERM', exitHandler(0, 'SIGTERM'));
+process.on('SIGINT', exitHandler(0, 'SIGINT'));
 //# sourceMappingURL=app.js.map

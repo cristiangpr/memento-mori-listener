@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 
-
 import express from 'express'
 import { ethers, WebSocketProvider } from 'ethers'
 import mmAbi from './abis/mementoMori.json'
 import mmXAbi from './abis/mementoMoriXchain.json'
 import { baseGChainSelector, baseGMmAddress, prodUrl, sepoliaChainSelector, sepoliaMmAddress } from './constants'
+import { terminate } from './terminate'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config()
 const app = express()
@@ -78,11 +78,20 @@ async function main (): Promise<void> {
   })
 }
 void main()
-
 app.get('/', (req, res) => {
   res.send('Memento Mori Listener')
 })
 
-app.listen(port, () => {
-  console.log(`Express is listening at http://localhost:${port}`)
+const server = app.listen(port, () => {
+  console.log(`Express is listening at ${port}`)
 })
+
+const exitHandler = terminate(server, {
+  coredump: false,
+  timeout: 500
+})
+
+process.on('uncaughtException', exitHandler(1, 'Unexpected Error'))
+process.on('unhandledRejection', exitHandler(1, 'Unhandled Promise'))
+process.on('SIGTERM', exitHandler(0, 'SIGTERM'))
+process.on('SIGINT', exitHandler(0, 'SIGINT'))
